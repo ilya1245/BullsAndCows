@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Быки и Коровы</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div class="header-title">
+      <span class="header-emoji">🐂</span>
+      <h1>Быки и Коровы</h1>
+      <span class="header-emoji">🐄</span>
+    </div>
+  </header>
+
+  <!-- ===== SETTINGS ===== -->
+  <div class="settings-bar" id="settingsBar">
+    <div class="settings-row">
+
+      <div class="setting-group">
+        <label for="gameType">Тип игры</label>
+        <select id="gameType">
+          <option value="1">Компьютер задумывает</option>
+          <option value="2">Вы задумываете</option>
+          <option value="3" selected>Оба задумывают</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="numSize">Цифр в числе</label>
+        <select id="numSize">
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+
+      <div class="setting-group" id="skillGroup">
+        <label for="skill">Мастерство компьютера</label>
+        <select id="skill">
+          <option value="1">Высшее</option>
+          <option value="2" selected>Высокое</option>
+          <option value="3">Среднее</option>
+          <option value="4">Низкое</option>
+        </select>
+      </div>
+
+      <div class="setting-group" id="firstMoveGroup">
+        <label for="firstMove">Первый ход</label>
+        <select id="firstMove">
+          <option value="1" selected>Вы</option>
+          <option value="2">Компьютер</option>
+        </select>
+      </div>
+
+      <div class="setting-group" id="lastMoveGroup">
+        <label class="checkbox-label">
+          <input type="checkbox" id="lastMove" checked>
+          <span class="checkbox-text">Продолжить после победы одной стороны</span>
+        </label>
+      </div>
+
+    </div>
+
+    <div class="buttons-row">
+      <button id="btnNewGame"   class="btn btn-primary">▶ Новая игра</button>
+      <button id="btnBreakGame" class="btn btn-secondary" disabled>⏹ Прервать</button>
+      <button id="btnHelp"      class="btn btn-ghost">? Правила</button>
+    </div>
+  </div>
+
+  <!-- ===== STATUS BAR ===== -->
+  <div class="status-bar" id="statusBar">Настройте параметры и нажмите «Новая игра»</div>
+
+  <!-- ===== GAME AREA ===== -->
+  <main class="game-area" id="gameArea">
+    <div class="welcome">
+      <p>Выберите тип игры и нажмите <strong>«Новая игра»</strong></p>
+    </div>
+  </main>
+
+</div><!-- /app -->
+
+<!-- ===== HELP MODAL ===== -->
+<div class="modal-overlay" id="helpModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Правила игры</h2>
+      <button class="modal-close" id="closeHelp">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Компьютер задумывает число. Оно может быть от трёхзначного до шестизначного по вашему усмотрению (Тип игры). По умолчанию число четырёхзначное. <strong>Цифры не повторяются, и первая цифра — не ноль.</strong> Ваша цель — разгадать это число.</p>
+
+      <h3>Как играть</h3>
+      <p>Вы предлагаете свой вариант, а компьютер сообщает результат:</p>
+      <ul>
+        <li><span class="bull-text">🐂 Бык</span> — угаданная цифра стоит на своём месте.</li>
+        <li><span class="cow-text">🐄 Корова</span> — угаданная цифра стоит не на своём месте.</li>
+      </ul>
+      <p>Чтобы выиграть, нужно получить столько быков, сколько цифр в числе.</p>
+
+      <h3>Пример</h3>
+      <div class="example-box">
+        <p>Компьютер задумал: <strong>8203</strong></p>
+        <p>Ваш вариант: <strong>7235</strong></p>
+        <p>Ответ: <span class="bull-text">1 бык</span> (цифра «2» на своём месте), <span class="cow-text">1 корова</span> (цифра «3» есть, но не на том месте).</p>
+      </div>
+
+      <h3>Хитрость</h3>
+      <p>Если совсем не можете разгадать — введите слово <code>number</code> вместо числа (не раньше 5-го хода), и компьютер чистосердечно признается. Но это проигрыш!</p>
+
+      <h3>Типы игры</h3>
+      <ul>
+        <li><strong>Компьютер задумывает</strong> — вы отгадываете.</li>
+        <li><strong>Вы задумываете</strong> — компьютер отгадывает, вы сообщаете ему быков и коров.</li>
+        <li><strong>Оба задумывают</strong> — оба отгадывают по очереди. Победит тот, кто разгадает первым (или оба, если включена опция «Продолжить»).</li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="closeHelp2">Понятно!</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/game.js"></script>
+</body>
+</html>
