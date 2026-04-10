@@ -78,6 +78,11 @@ fun MainScreen(viewModel: GameViewModel) {
         }
     }
 
+    // Open drawer on first launch
+    LaunchedEffect(Unit) {
+        drawerState.open()
+    }
+
     // Close drawer when game starts
     LaunchedEffect(isRunning) {
         if (isRunning) drawerState.close()
