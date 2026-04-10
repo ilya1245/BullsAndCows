@@ -1,29 +1,24 @@
 package com.example.bullsandcows.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.bullsandcows.R
+import com.example.bullsandcows.ui.screens.KbTarget
 
 @Composable
 fun RightInputRow(
-    bulls:              String,
-    cows:               String,
-    onBulls:            (String) -> Unit,
-    onCows:             (String) -> Unit,
-    enabled:            Boolean,
-    onSubmit:           () -> Unit,
-    modifier:           Modifier = Modifier,
-    bullsFocusRequester: FocusRequester? = null
+    bulls:        String,
+    cows:         String,
+    kbTarget:     KbTarget,
+    onFieldClick: (KbTarget) -> Unit,
+    enabled:      Boolean,
+    onSubmit:     () -> Unit,
+    modifier:     Modifier = Modifier
 ) {
     Row(
         modifier              = modifier.fillMaxWidth(),
@@ -34,31 +29,25 @@ fun RightInputRow(
             text  = stringResource(R.string.input_bulls),
             style = MaterialTheme.typography.bodyMedium
         )
-        CompactOutlinedTextField(
-            value           = bulls,
-            onValueChange   = { v: String -> if (v.length <= 1) onBulls(v.filter { c -> c.isDigit() }) },
-            enabled         = enabled,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction    = ImeAction.Next
-            ),
-            focusRequester  = bullsFocusRequester,
-            modifier = Modifier.width(56.dp)
+        GameInputField(
+            value       = bulls,
+            placeholder = "0",
+            isActive    = kbTarget == KbTarget.RIGHT_BULLS,
+            enabled     = enabled,
+            onClick     = { onFieldClick(KbTarget.RIGHT_BULLS) },
+            modifier    = Modifier.width(56.dp)
         )
         Text(
             text  = stringResource(R.string.input_cows),
             style = MaterialTheme.typography.bodyMedium
         )
-        CompactOutlinedTextField(
-            value           = cows,
-            onValueChange   = { v: String -> if (v.length <= 1) onCows(v.filter { c -> c.isDigit() }) },
-            enabled         = enabled,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-                imeAction    = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = { onSubmit() }),
-            modifier = Modifier.width(56.dp)
+        GameInputField(
+            value       = cows,
+            placeholder = "0",
+            isActive    = kbTarget == KbTarget.RIGHT_COWS,
+            enabled     = enabled,
+            onClick     = { onFieldClick(KbTarget.RIGHT_COWS) },
+            modifier    = Modifier.width(56.dp)
         )
         Button(
             onClick  = onSubmit,

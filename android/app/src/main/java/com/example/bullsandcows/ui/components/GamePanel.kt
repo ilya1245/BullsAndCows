@@ -1,19 +1,17 @@
 package com.example.bullsandcows.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.bullsandcows.R
 import com.example.bullsandcows.model.*
+import com.example.bullsandcows.ui.screens.KbTarget
 
 // ---- Welcome area (shown before first game) ----
 
@@ -36,40 +34,81 @@ fun WelcomeArea(modifier: Modifier = Modifier) {
 
 @Composable
 fun GameArea(
-    state:   UiState,
-    onLeft:  (String) -> Unit,
-    onRight: (Int, Int) -> Unit,
-    modifier: Modifier = Modifier
+    state:        UiState,
+    leftInput:    String,
+    rightBulls:   String,
+    rightCows:    String,
+    kbTarget:     KbTarget,
+    onFieldClick: (KbTarget) -> Unit,
+    onLeft:       () -> Unit,
+    onRight:      (Int, Int) -> Unit,
+    modifier:     Modifier = Modifier
 ) {
     val showLeft  = state.settings.gameType == 1 || state.settings.gameType == 3
     val showRight = state.settings.gameType == 2 || state.settings.gameType == 3
 
     if (showLeft && showRight) {
-        // Both panels side by side (on wide screens) or stacked on narrow
+        // Active panel on top
+        val leftFirst = state.left.inputEnabled || (!state.left.inputEnabled && !state.right.inputEnabled)
         Column(modifier = modifier.fillMaxSize()) {
-            PlayerPanel(
-                state    = state.left,
-                onMove   = onLeft,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.height(4.dp))
-            ComputerPanel(
-                state    = state.right,
-                onAnswer = onRight,
-                modifier = Modifier.weight(1f)
-            )
+            if (leftFirst) {
+                PlayerPanel(
+                    state        = state.left,
+                    inputValue   = leftInput,
+                    kbTarget     = kbTarget,
+                    onFieldClick = onFieldClick,
+                    onMove       = onLeft,
+                    modifier     = Modifier.weight(1f)
+                )
+                Spacer(Modifier.height(4.dp))
+                ComputerPanel(
+                    state        = state.right,
+                    bulls        = rightBulls,
+                    cows         = rightCows,
+                    kbTarget     = kbTarget,
+                    onFieldClick = onFieldClick,
+                    onAnswer     = onRight,
+                    modifier     = Modifier.weight(1f)
+                )
+            } else {
+                ComputerPanel(
+                    state        = state.right,
+                    bulls        = rightBulls,
+                    cows         = rightCows,
+                    kbTarget     = kbTarget,
+                    onFieldClick = onFieldClick,
+                    onAnswer     = onRight,
+                    modifier     = Modifier.weight(1f)
+                )
+                Spacer(Modifier.height(4.dp))
+                PlayerPanel(
+                    state        = state.left,
+                    inputValue   = leftInput,
+                    kbTarget     = kbTarget,
+                    onFieldClick = onFieldClick,
+                    onMove       = onLeft,
+                    modifier     = Modifier.weight(1f)
+                )
+            }
         }
     } else if (showLeft) {
         PlayerPanel(
-            state    = state.left,
-            onMove   = onLeft,
-            modifier = modifier.fillMaxSize()
+            state        = state.left,
+            inputValue   = leftInput,
+            kbTarget     = kbTarget,
+            onFieldClick = onFieldClick,
+            onMove       = onLeft,
+            modifier     = modifier.fillMaxSize()
         )
     } else {
         ComputerPanel(
-            state    = state.right,
-            onAnswer = onRight,
-            modifier = modifier.fillMaxSize()
+            state        = state.right,
+            bulls        = rightBulls,
+            cows         = rightCows,
+            kbTarget     = kbTarget,
+            onFieldClick = onFieldClick,
+            onAnswer     = onRight,
+            modifier     = modifier.fillMaxSize()
         )
     }
 }
@@ -78,25 +117,18 @@ fun GameArea(
 
 @Composable
 fun PlayerPanel(
-    state:    LeftPanelState,
-    onMove:   (String) -> Unit,
-    modifier: Modifier = Modifier
+    state:        LeftPanelState,
+    inputValue:   String,
+    kbTarget:     KbTarget,
+    onFieldClick: (KbTarget) -> Unit,
+    onMove:       () -> Unit,
+    modifier:     Modifier = Modifier
 ) {
-    var inputValue by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(state.inputEnabled) {
-        if (state.inputEnabled) {
-            try { focusRequester.requestFocus() } catch (_: Exception) {}
-        }
-    }
-
     Column(modifier = modifier.padding(8.dp)) {
         // Header
         PanelHeader(
             icon     = "🎯",
-            title    = stringResource(R.string.panel_left_title),
-            subtitle = stringResource(R.string.panel_left_subtitle)
+            title    = stringResource(R.string.panel_left_title)
         )
 
         // History table
@@ -111,19 +143,12 @@ fun PlayerPanel(
 
         // Input row
         LeftInputRow(
-            value          = inputValue,
-            onChange       = { inputValue = it },
-            enabled        = state.inputEnabled,
-            focusRequester = focusRequester,
-            onSubmit       = {
-                val v = inputValue.trim()
-                if (v.isNotEmpty()) {
-                    onMove(v)
-                    inputValue = ""
-                }
-            }
+            value        = inputValue,
+            isActive     = kbTarget == KbTarget.LEFT,
+            onActivate   = { onFieldClick(KbTarget.LEFT) },
+            enabled      = state.inputEnabled,
+            onSubmit     = onMove
         )
-
     }
 }
 
@@ -131,26 +156,19 @@ fun PlayerPanel(
 
 @Composable
 fun ComputerPanel(
-    state:    RightPanelState,
-    onAnswer: (Int, Int) -> Unit,
-    modifier: Modifier = Modifier
+    state:        RightPanelState,
+    bulls:        String,
+    cows:         String,
+    kbTarget:     KbTarget,
+    onFieldClick: (KbTarget) -> Unit,
+    onAnswer:     (Int, Int) -> Unit,
+    modifier:     Modifier = Modifier
 ) {
-    var bulls by remember { mutableStateOf("") }
-    var cows  by remember { mutableStateOf("") }
-    val bullsFocusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(state.inputEnabled) {
-        if (state.inputEnabled) {
-            try { bullsFocusRequester.requestFocus() } catch (_: Exception) {}
-        }
-    }
-
     Column(modifier = modifier.padding(8.dp)) {
         // Header
         PanelHeader(
-            icon     = "🤖",
-            title    = stringResource(R.string.panel_right_title),
-            subtitle = stringResource(R.string.panel_right_subtitle)
+            icon  = "🤖",
+            title = stringResource(R.string.panel_right_title)
         )
 
         // History table
@@ -165,18 +183,15 @@ fun ComputerPanel(
 
         // Input row
         RightInputRow(
-            bulls               = bulls,
-            cows                = cows,
-            onBulls             = { bulls = it },
-            onCows              = { cows  = it },
-            enabled             = state.inputEnabled,
-            bullsFocusRequester = bullsFocusRequester,
-            onSubmit            = {
+            bulls        = bulls,
+            cows         = cows,
+            kbTarget     = kbTarget,
+            onFieldClick = onFieldClick,
+            enabled      = state.inputEnabled,
+            onSubmit     = {
                 val b = bulls.trim().toIntOrNull() ?: -1
                 val c = cows.trim().toIntOrNull()  ?: -1
                 onAnswer(b, c)
-                bulls = ""
-                cows  = ""
             }
         )
     }
@@ -185,13 +200,13 @@ fun ComputerPanel(
 // ---- Panel header ----
 
 @Composable
-private fun PanelHeader(icon: String, title: String, subtitle: String = "") {
+private fun PanelHeader(icon: String, title: String) {
     Row(modifier = Modifier.padding(bottom = 4.dp)) {
         Text(icon, style = MaterialTheme.typography.titleSmall)
         Spacer(Modifier.width(6.dp))
         Text(
-            text  = title,
-            style = MaterialTheme.typography.titleSmall,
+            text       = title,
+            style      = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold
         )
     }

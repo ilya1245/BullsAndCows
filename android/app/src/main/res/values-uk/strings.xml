@@ -79,7 +79,7 @@
     <string name="prompt_wait_your_answer">Очікування вашої відповіді</string>
     <string name="prompt_contradictory">❌ Суперечливі дані. Комп\'ютер не може продовжити.</string>
     <string name="prompt_revealed">👀 Ви підгледіли: %s (вважається поразкою)</string>
-    <string name="prompt_number_too_early">⚠️ Команда «number» доступна з 5-го ходу</string>
+    <string name="prompt_number_too_early">⚠️ Команда «?» доступна з 5-го ходу</string>
     <string name="prompt_invalid_number">⚠️ Введіть коректне %d-значне число без повторів, не починаючи з нуля</string>
     <string name="prompt_invalid_answer">⚠️ Введіть коректні значення: бики + корови ≤ %d</string>
     <string name="prompt_game_broken">Гру перервано. Число було: %s</string>
@@ -101,7 +101,7 @@
     <string name="help_example_title">Приклад</string>
     <string name="help_example">Комп\'ютер загадав: 8203\nВаш варіант: 7235\nВідповідь: 1 бик (цифра «2» на своєму місці), 1 корова (цифра «3» є, але не на тому місці).</string>
     <string name="help_trick_title">Допомога</string>
-    <string name="help_trick">Введіть «number» замість числа (не раніше 5-го ходу), і комп\'ютер розкриє відповідь. Але це рахується як поразка!</string>
+    <string name="help_trick">Введіть «?» замість числа (не раніше 5-го ходу), і комп\'ютер розкриє відповідь. Але це рахується як поразка!</string>
     <string name="help_types_title">Типи гри</string>
     <string name="help_type_1">Комп\'ютер загадує — ви відгадуєте.</string>
     <string name="help_type_2">Ви загадуєте — комп\'ютер відгадує, ви повідомляєте биків і корів.</string>

@@ -112,7 +112,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val state   = _uiState.value
         val numSize = state.settings.numSize
 
-        if (guess.lowercase() == "number") {
+        if (guess == "?") {
             if (state.left.attempts.size >= 4) revealCompNumber()
             else _uiState.update { it.copy(
                 left = it.left.copy(

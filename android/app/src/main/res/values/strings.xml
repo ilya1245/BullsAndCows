@@ -79,7 +79,7 @@
     <string name="prompt_wait_your_answer">Waiting for your answer</string>
     <string name="prompt_contradictory">❌ Contradictory data. Computer cannot continue.</string>
     <string name="prompt_revealed">👀 You peeked: %s (counts as a loss)</string>
-    <string name="prompt_number_too_early">⚠️ «number» command available from move 5</string>
+    <string name="prompt_number_too_early">⚠️ «?» command available from move 5</string>
     <string name="prompt_invalid_number">⚠️ Enter a valid %d-digit number with unique digits, no leading zero</string>
     <string name="prompt_invalid_answer">⚠️ Enter valid values: bulls + cows ≤ %d</string>
     <string name="prompt_game_broken">Game interrupted. The number was: %s</string>
@@ -101,7 +101,7 @@
     <string name="help_example_title">Example</string>
     <string name="help_example">Computer thought: 8203\nYour guess: 7235\nResult: 1 bull (digit «2» is in place), 1 cow (digit «3» is present but wrong position).</string>
     <string name="help_trick_title">Hint</string>
-    <string name="help_trick">Type «number» instead of a digit from move 5 to see the answer — but it counts as a loss!</string>
+    <string name="help_trick">Type «?» from move 5 to see the answer — but it counts as a loss!</string>
     <string name="help_types_title">Game types</string>
     <string name="help_type_1">Computer thinks — you guess.</string>
     <string name="help_type_2">You think — computer guesses, you tell it bulls and cows.</string>
