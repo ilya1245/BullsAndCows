@@ -201,7 +201,11 @@ private fun PanelHeader(icon: String, title: String, subtitle: String = "") {
 
 @Composable
 fun PromptText(prompt: com.example.bullsandcows.model.Prompt, modifier: Modifier = Modifier) {
-    if (prompt.text.isEmpty()) return
+    if (prompt.isEmpty) return
+    val text = if (prompt.args.isEmpty())
+        androidx.compose.ui.res.stringResource(prompt.resId)
+    else
+        androidx.compose.ui.res.stringResource(prompt.resId, *prompt.args.toTypedArray())
     val color = when (prompt.type) {
         PromptType.SUCCESS -> com.example.bullsandcows.ui.theme.BullColor
         PromptType.WARN    -> MaterialTheme.colorScheme.tertiary
@@ -210,7 +214,7 @@ fun PromptText(prompt: com.example.bullsandcows.model.Prompt, modifier: Modifier
         PromptType.NORMAL  -> MaterialTheme.colorScheme.onSurface
     }
     Text(
-        text     = prompt.text,
+        text     = text,
         style    = MaterialTheme.typography.bodyMedium,
         color    = color,
         modifier = modifier.padding(vertical = 4.dp)

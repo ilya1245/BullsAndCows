@@ -3,6 +3,8 @@
     <string name="app_name">Бики і Корови</string>
 
     <!-- Settings labels -->
+    <string name="settings_language">Мова</string>
+    <string name="lang_system">Системна</string>
     <string name="settings_game_type">Тип гри</string>
     <string name="settings_num_size">Цифр</string>
     <string name="settings_skill">Майстерність комп\'ютера</string>
@@ -90,7 +92,7 @@
 
     <!-- Help dialog -->
     <string name="help_title">Правила гри</string>
-    <string name="help_intro">Комп\'ютер загадує число з неповторюваними цифрами, без ведучого нуля. За замовчуванням — 4 цифри (3–6 у налаштуваннях). Ваша мета — розгадати його.</string>
+    <string name="help_intro">Комп\'ютер загадує число з неповторюваними цифрами, нуль не може бути на початку числа. За замовчуванням — 4 цифри (3–6 у налаштуваннях). Ваша мета — розгадати це число.</string>
     <string name="help_how_to_play_title">Як грати</string>
     <string name="help_how_to_play">Ви пропонуєте свій варіант, а комп\'ютер повідомляє результат:</string>
     <string name="help_bull">🐂 Бик — вгадана цифра стоїть на своєму місці.</string>
@@ -98,8 +100,8 @@
     <string name="help_win">Щоб виграти, потрібно отримати стільки биків, скільки цифр у числі.</string>
     <string name="help_example_title">Приклад</string>
     <string name="help_example">Комп\'ютер загадав: 8203\nВаш варіант: 7235\nВідповідь: 1 бик (цифра «2» на своєму місці), 1 корова (цифра «3» є, але не на тому місці).</string>
-    <string name="help_trick_title">Хитрість</string>
-    <string name="help_trick">Введіть «number» замість числа (не раніше 5-го ходу), і комп\'ютер розкриє відповідь. Але це поразка!</string>
+    <string name="help_trick_title">Допомога</string>
+    <string name="help_trick">Введіть «number» замість числа (не раніше 5-го ходу), і комп\'ютер розкриє відповідь. Але це рахується як поразка!</string>
     <string name="help_types_title">Типи гри</string>
     <string name="help_type_1">Комп\'ютер загадує — ви відгадуєте.</string>
     <string name="help_type_2">Ви загадуєте — комп\'ютер відгадує, ви повідомляєте биків і корів.</string>

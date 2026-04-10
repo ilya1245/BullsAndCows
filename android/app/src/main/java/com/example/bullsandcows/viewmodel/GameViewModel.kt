@@ -1,7 +1,6 @@
 package com.example.bullsandcows.viewmodel
 
 import android.app.Application
-import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bullsandcows.R
@@ -17,18 +16,11 @@ import kotlinx.coroutines.launch
 
 class GameViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val _uiState = MutableStateFlow(UiState(
-        statusText = app.getString(R.string.status_configure)
-    ))
+    private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     // Mutable AI object kept outside immutable state
     private var compPlayer: ComputerPlayer? = null
-
-    // ---- String helper ----
-
-    private fun s(@StringRes id: Int, vararg args: Any?): String =
-        getApplication<Application>().getString(id, *args)
 
     // ---- Settings ----
 
@@ -44,48 +36,45 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
 
         _uiState.update {
             it.copy(
-                phase = GamePhase.RUNNING,
-                statusText = buildStatusText(settings),
-                left = LeftPanelState(compNumber = GameNumber.generate(settings.numSize)),
-                right = RightPanelState()
+                phase      = GamePhase.RUNNING,
+                statusSpec = StatusSpec.Running(settings),
+                left       = LeftPanelState(compNumber = GameNumber.generate(settings.numSize)),
+                right      = RightPanelState()
             )
         }
 
         when (settings.gameType) {
             1 -> {
-                // Only player guesses
                 _uiState.update { it.copy(
                     left = it.left.copy(
                         inputEnabled = true,
-                        prompt = Prompt(s(R.string.prompt_enter_number, settings.numSize))
+                        prompt = Prompt(R.string.prompt_enter_number, listOf(settings.numSize))
                     )
                 )}
             }
             2 -> {
-                // Only computer guesses
                 _uiState.update { it.copy(
                     right = it.right.copy(
-                        prompt = Prompt(s(R.string.prompt_think_number, settings.numSize))
+                        prompt = Prompt(R.string.prompt_think_number, listOf(settings.numSize))
                     )
                 )}
                 viewModelScope.launch { delay(600); doCompTurn() }
             }
             3 -> {
-                // Both guess
                 if (settings.whoFirst == 1) {
                     _uiState.update { it.copy(
                         left = it.left.copy(
                             inputEnabled = true,
-                            prompt = Prompt(s(R.string.prompt_enter_number, settings.numSize))
+                            prompt = Prompt(R.string.prompt_enter_number, listOf(settings.numSize))
                         ),
                         right = it.right.copy(
-                            prompt = Prompt(s(R.string.prompt_wait_player), PromptType.MUTED)
+                            prompt = Prompt(R.string.prompt_wait_player, type = PromptType.MUTED)
                         )
                     )}
                 } else {
                     _uiState.update { it.copy(
                         left = it.left.copy(
-                            prompt = Prompt(s(R.string.prompt_wait_comp), PromptType.MUTED)
+                            prompt = Prompt(R.string.prompt_wait_comp, type = PromptType.MUTED)
                         )
                     )}
                     viewModelScope.launch { delay(400); doCompTurn() }
@@ -102,11 +91,11 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         if (leftNumber.isNotEmpty() && !leftWon) {
             _uiState.update { it.copy(
                 left = it.left.copy(
-                    prompt = Prompt(s(R.string.prompt_game_broken, leftNumber), PromptType.WARN)
+                    prompt = Prompt(R.string.prompt_game_broken, listOf(leftNumber), PromptType.WARN)
                 )
             )}
         }
-        _uiState.update { it.copy(statusText = s(R.string.status_game_broken)) }
+        _uiState.update { it.copy(statusSpec = StatusSpec.Broken) }
     }
 
     private fun endGame() {
@@ -127,7 +116,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             if (state.left.attempts.size >= 4) revealCompNumber()
             else _uiState.update { it.copy(
                 left = it.left.copy(
-                    prompt = Prompt(s(R.string.prompt_number_too_early), PromptType.WARN)
+                    prompt = Prompt(R.string.prompt_number_too_early, type = PromptType.WARN)
                 )
             )}
             return
@@ -136,7 +125,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         if (!GameNumber.isValid(guess, numSize)) {
             _uiState.update { it.copy(
                 left = it.left.copy(
-                    prompt = Prompt(s(R.string.prompt_invalid_number, numSize), PromptType.ERROR)
+                    prompt = Prompt(R.string.prompt_invalid_number, listOf(numSize), PromptType.ERROR)
                 )
             )}
             return
@@ -156,18 +145,16 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         val won = (bulls == numSize)
 
         if (won) {
-            val n   = newAttempts.size
-            val msg = if (state.left.practicing)
-                s(R.string.prompt_player_won_practice, secret, n)
-            else
-                s(R.string.prompt_player_won, secret, n)
+            val n      = newAttempts.size
+            val resId  = if (state.left.practicing) R.string.prompt_player_won_practice
+                         else R.string.prompt_player_won
 
             _uiState.update { it.copy(
                 left = it.left.copy(
                     attempts     = newAttempts,
                     won          = true,
                     inputEnabled = false,
-                    prompt       = Prompt(msg, PromptType.SUCCESS)
+                    prompt       = Prompt(resId, listOf(secret, n), PromptType.SUCCESS)
                 )
             )}
             afterLeftWin()
@@ -175,19 +162,18 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             _uiState.update { it.copy(
                 left = it.left.copy(
                     attempts = newAttempts,
-                    prompt   = Prompt(s(R.string.prompt_continue_need_bulls, numSize))
+                    prompt   = Prompt(R.string.prompt_continue_need_bulls, listOf(numSize))
                 )
             )}
 
             if (state.settings.gameType == 3) {
                 if (state.right.won) {
-                    // computer already won — player continues as practice
                     if (!state.left.practicing) {
                         _uiState.update { it.copy(
                             left = it.left.copy(
                                 practicing   = true,
                                 inputEnabled = true,
-                                prompt       = Prompt(s(R.string.prompt_player_lost), PromptType.WARN)
+                                prompt       = Prompt(R.string.prompt_player_lost, type = PromptType.WARN)
                             )
                         )}
                     } else {
@@ -198,7 +184,6 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
                     viewModelScope.launch { delay(400); doCompTurn() }
                 }
             } else {
-                // game type 1: just re-enable input
                 _uiState.update { it.copy(left = it.left.copy(inputEnabled = true)) }
             }
         }
@@ -215,7 +200,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
                 won          = true,
                 inputEnabled = false,
                 attempts     = it.left.attempts + attempt,
-                prompt       = Prompt(s(R.string.prompt_revealed, secret), PromptType.WARN)
+                prompt       = Prompt(R.string.prompt_revealed, listOf(secret), PromptType.WARN)
             )
         )}
         afterLeftWin()
@@ -226,9 +211,9 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         when (state.settings.gameType) {
             1 -> endGame()
             3 -> when {
-                state.right.won            -> endGame()
-                state.settings.lastMove    -> viewModelScope.launch { delay(400); doCompTurn() }
-                else                       -> endGame()
+                state.right.won         -> endGame()
+                state.settings.lastMove -> viewModelScope.launch { delay(400); doCompTurn() }
+                else                    -> endGame()
             }
         }
     }
@@ -240,7 +225,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         if (bulls < 0 || cows < 0 || bulls + cows > numSize || bulls > numSize) {
             _uiState.update { it.copy(
                 right = it.right.copy(
-                    prompt = Prompt(s(R.string.prompt_invalid_answer, numSize), PromptType.ERROR)
+                    prompt = Prompt(R.string.prompt_invalid_answer, listOf(numSize), PromptType.ERROR)
                 )
             )}
             return
@@ -267,49 +252,44 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
         )}
 
         if (won) {
-            val n   = compPlayer?.size ?: newAttempts.size
-            val msg = if (state.right.practicing)
-                s(R.string.prompt_comp_won_practice, n)
-            else
-                s(R.string.prompt_comp_won, n)
+            val n     = compPlayer?.size ?: newAttempts.size
+            val resId = if (state.right.practicing) R.string.prompt_comp_won_practice
+                        else R.string.prompt_comp_won
 
             _uiState.update { it.copy(
                 right = it.right.copy(
                     won    = true,
-                    prompt = Prompt(msg, PromptType.SUCCESS)
+                    prompt = Prompt(resId, listOf(n), PromptType.SUCCESS)
                 )
             )}
             afterRightWin()
         } else {
             _uiState.update { it.copy(
                 right = it.right.copy(
-                    prompt = Prompt(s(R.string.prompt_wait_your_answer))
+                    prompt = Prompt(R.string.prompt_wait_your_answer)
                 )
             )}
 
             if (state.settings.gameType == 3) {
                 if (state.left.won) {
-                    // player already won — computer continues as practice
                     if (!state.right.practicing) {
                         _uiState.update { it.copy(
                             right = it.right.copy(
                                 practicing = true,
-                                prompt     = Prompt(s(R.string.prompt_comp_lost), PromptType.WARN)
+                                prompt     = Prompt(R.string.prompt_comp_lost, type = PromptType.WARN)
                             )
                         )}
                     }
                     viewModelScope.launch { delay(400); doCompTurn() }
                 } else {
-                    val numS = state.settings.numSize
                     _uiState.update { it.copy(
                         left = it.left.copy(
                             inputEnabled = true,
-                            prompt       = Prompt(s(R.string.prompt_enter_number, numS))
+                            prompt       = Prompt(R.string.prompt_enter_number, listOf(numSize))
                         )
                     )}
                 }
             } else {
-                // game type 2: computer keeps guessing
                 viewModelScope.launch { delay(400); doCompTurn() }
             }
         }
@@ -325,7 +305,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
                     _uiState.update { it.copy(
                         left = it.left.copy(
                             inputEnabled = true,
-                            prompt       = Prompt(s(R.string.prompt_last_chance), PromptType.WARN)
+                            prompt       = Prompt(R.string.prompt_last_chance, type = PromptType.WARN)
                         )
                     )}
                 }
@@ -342,7 +322,7 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             _uiState.update { it.copy(
                 right = it.right.copy(
                     inputEnabled = false,
-                    prompt       = Prompt(s(R.string.prompt_contradictory), PromptType.ERROR)
+                    prompt       = Prompt(R.string.prompt_contradictory, type = PromptType.ERROR)
                 )
             )}
             endGame()
@@ -352,33 +332,8 @@ class GameViewModel(app: Application) : AndroidViewModel(app) {
             right = it.right.copy(
                 currentMove  = move,
                 inputEnabled = true,
-                prompt       = Prompt(s(R.string.prompt_comp_move, move))
+                prompt       = Prompt(R.string.prompt_comp_move, listOf(move))
             )
         )}
-    }
-
-    // ---- Status bar text ----
-
-    private fun buildStatusText(settings: GameSettings): String {
-        val typeText = when (settings.gameType) {
-            1    -> s(R.string.status_you_guess)
-            2    -> s(R.string.status_comp_guesses)
-            else -> s(R.string.status_both_guess)
-        }
-        val skillLabels = listOf(
-            s(R.string.skill_highest),
-            s(R.string.skill_high),
-            s(R.string.skill_medium),
-            s(R.string.skill_low)
-        )
-        val numText = s(R.string.status_digits, settings.numSize)
-        var result  = "$typeText | $numText"
-        if (settings.gameType != 1)
-            result += " | " + s(R.string.status_skill, skillLabels[settings.skill - 1])
-        if (settings.gameType == 3) {
-            val firstLabels = listOf(s(R.string.first_move_you), s(R.string.first_move_comp))
-            result += " | " + s(R.string.status_first, firstLabels[settings.whoFirst - 1])
-        }
-        return result
     }
 }

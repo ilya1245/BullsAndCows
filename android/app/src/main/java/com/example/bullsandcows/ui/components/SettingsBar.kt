@@ -1,5 +1,6 @@
 package com.example.bullsandcows.ui.components
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -9,11 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import com.example.bullsandcows.R
 import com.example.bullsandcows.model.GameSettings
+import com.example.bullsandcows.model.StatusSpec
 
 @Composable
-fun TopBar(onMenuClick: () -> Unit, statusText: String) {
+fun TopBar(onMenuClick: () -> Unit, statusSpec: StatusSpec) {
     Surface(tonalElevation = 4.dp, modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -29,7 +32,7 @@ fun TopBar(onMenuClick: () -> Unit, statusText: String) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu", modifier = Modifier.size(18.dp))
             }
             Text(
-                text     = statusText,
+                text     = statusSpec.resolve(),
                 style    = MaterialTheme.typography.bodyMedium,
                 color    = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 maxLines = 1,
@@ -37,6 +40,39 @@ fun TopBar(onMenuClick: () -> Unit, statusText: String) {
                 modifier = Modifier.weight(1f)
             )
         }
+    }
+}
+
+@Composable
+private fun StatusSpec.resolve(): String = when (this) {
+    StatusSpec.Configure -> stringResource(R.string.status_configure)
+    StatusSpec.Broken    -> stringResource(R.string.status_game_broken)
+    is StatusSpec.Running -> {
+        val s = settings
+        val typeText = stringResource(when (s.gameType) {
+            1    -> R.string.status_you_guess
+            2    -> R.string.status_comp_guesses
+            else -> R.string.status_both_guess
+        })
+        val numText = stringResource(R.string.status_digits, s.numSize)
+        var result = "$typeText | $numText"
+        if (s.gameType != 1) {
+            val skillLabel = listOf(
+                stringResource(R.string.skill_highest),
+                stringResource(R.string.skill_high),
+                stringResource(R.string.skill_medium),
+                stringResource(R.string.skill_low)
+            )[s.skill - 1]
+            result += " | " + stringResource(R.string.status_skill, skillLabel)
+        }
+        if (s.gameType == 3) {
+            val firstLabel = listOf(
+                stringResource(R.string.first_move_you),
+                stringResource(R.string.first_move_comp)
+            )[s.whoFirst - 1]
+            result += " | " + stringResource(R.string.status_first, firstLabel)
+        }
+        result
     }
 }
 
@@ -56,6 +92,28 @@ fun DrawerContent(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Language selector — always enabled
+            val currentLang = remember {
+                val tag = AppCompatDelegate.getApplicationLocales()[0]?.language ?: ""
+                when (tag) { "en" -> 1; "uk" -> 2; else -> 0 }
+            }
+            DropdownSetting(
+                label    = stringResource(R.string.settings_language),
+                options  = listOf(stringResource(R.string.lang_system), "English", "Українська"),
+                selected = currentLang,
+                enabled  = true,
+                onSelect = { idx ->
+                    val locales = when (idx) {
+                        1    -> LocaleListCompat.forLanguageTags("en")
+                        2    -> LocaleListCompat.forLanguageTags("uk")
+                        else -> LocaleListCompat.getEmptyLocaleList()
+                    }
+                    AppCompatDelegate.setApplicationLocales(locales)
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
             Text(
                 text  = stringResource(R.string.settings_game_type),
                 style = MaterialTheme.typography.titleMedium,
@@ -167,18 +225,16 @@ private fun DropdownSetting(
         onExpandedChange = { if (enabled) expanded = it },
         modifier         = modifier
     ) {
-        OutlinedTextField(
-            value         = options.getOrElse(selected) { "" },
+        CompactOutlinedTextField(
+            value        = options.getOrElse(selected) { "" },
             onValueChange = {},
-            readOnly      = true,
-            enabled       = enabled,
-            label         = { Text(label, style = MaterialTheme.typography.labelSmall) },
-            trailingIcon  = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
-            singleLine    = true,
-            modifier      = Modifier
+            readOnly     = true,
+            enabled      = enabled,
+            label        = { Text(label, style = MaterialTheme.typography.labelSmall) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled) },
+            modifier     = Modifier
                 .menuAnchor()
-                .fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyMedium
+                .fillMaxWidth()
         )
         ExposedDropdownMenu(
             expanded         = expanded && enabled,

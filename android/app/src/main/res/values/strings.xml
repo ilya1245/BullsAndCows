@@ -3,6 +3,8 @@
     <string name="app_name">Bulls and Cows</string>
 
     <!-- Settings labels -->
+    <string name="settings_language">Language</string>
+    <string name="lang_system">System default</string>
     <string name="settings_game_type">Game type</string>
     <string name="settings_num_size">Digits</string>
     <string name="settings_skill">Computer skill</string>

@@ -1,20 +1,32 @@
 package com.example.bullsandcows.model
 
+import androidx.annotation.StringRes
+
 // ---- Top-level game phase ----
 
 enum class GamePhase { IDLE, RUNNING, FINISHED }
 
-// ---- Prompt ----
+// ---- Prompt (stores resource ID + args; resolved in composable) ----
 
 enum class PromptType { NORMAL, SUCCESS, WARN, ERROR, MUTED }
 
 data class Prompt(
-    val text: String = "",
+    @StringRes val resId: Int = 0,
+    val args: List<Any> = emptyList(),
     val type: PromptType = PromptType.NORMAL
 ) {
+    val isEmpty get() = resId == 0
     companion object {
         val Empty = Prompt()
     }
+}
+
+// ---- Status bar spec (resolved in composable) ----
+
+sealed class StatusSpec {
+    object Configure : StatusSpec()
+    data class Running(val settings: GameSettings) : StatusSpec()
+    object Broken : StatusSpec()
 }
 
 // ---- Single move attempt ----
@@ -52,7 +64,7 @@ data class RightPanelState(
 data class UiState(
     val settings: GameSettings = GameSettings(),
     val phase: GamePhase = GamePhase.IDLE,
-    val statusText: String = "",
+    val statusSpec: StatusSpec = StatusSpec.Configure,
     val left: LeftPanelState = LeftPanelState(),
     val right: RightPanelState = RightPanelState()
 )

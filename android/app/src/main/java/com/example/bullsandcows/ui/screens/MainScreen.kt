@@ -49,7 +49,7 @@ fun MainScreen(viewModel: GameViewModel) {
         ) {
             TopBar(
                 onMenuClick = { scope.launch { drawerState.open() } },
-                statusText  = state.statusText
+                statusSpec  = state.statusSpec
             )
 
             when (state.phase) {

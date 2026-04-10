@@ -30,6 +30,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    applicationVariants.all {
+        outputs.all {
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
+                .outputFileName = "BullsAndCows.apk"
+        }
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
@@ -39,6 +46,7 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
     implementation(composeBom)
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
