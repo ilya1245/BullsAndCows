@@ -48,48 +48,25 @@ fun GameArea(
     val showRight = state.settings.gameType == 2 || state.settings.gameType == 3
 
     if (showLeft && showRight) {
-        // Active panel on top
-        val leftFirst = state.left.inputEnabled || (!state.left.inputEnabled && !state.right.inputEnabled)
         Column(modifier = modifier.fillMaxSize()) {
-            if (leftFirst) {
-                PlayerPanel(
-                    state        = state.left,
-                    inputValue   = leftInput,
-                    kbTarget     = kbTarget,
-                    onFieldClick = onFieldClick,
-                    onMove       = onLeft,
-                    modifier     = Modifier.weight(1f)
-                )
-                Spacer(Modifier.height(4.dp))
-                ComputerPanel(
-                    state        = state.right,
-                    bulls        = rightBulls,
-                    cows         = rightCows,
-                    kbTarget     = kbTarget,
-                    onFieldClick = onFieldClick,
-                    onAnswer     = onRight,
-                    modifier     = Modifier.weight(1f)
-                )
-            } else {
-                ComputerPanel(
-                    state        = state.right,
-                    bulls        = rightBulls,
-                    cows         = rightCows,
-                    kbTarget     = kbTarget,
-                    onFieldClick = onFieldClick,
-                    onAnswer     = onRight,
-                    modifier     = Modifier.weight(1f)
-                )
-                Spacer(Modifier.height(4.dp))
-                PlayerPanel(
-                    state        = state.left,
-                    inputValue   = leftInput,
-                    kbTarget     = kbTarget,
-                    onFieldClick = onFieldClick,
-                    onMove       = onLeft,
-                    modifier     = Modifier.weight(1f)
-                )
-            }
+            PlayerPanel(
+                state        = state.left,
+                inputValue   = leftInput,
+                kbTarget     = kbTarget,
+                onFieldClick = onFieldClick,
+                onMove       = onLeft,
+                modifier     = Modifier.weight(1f)
+            )
+            Spacer(Modifier.height(4.dp))
+            ComputerPanel(
+                state        = state.right,
+                bulls        = rightBulls,
+                cows         = rightCows,
+                kbTarget     = kbTarget,
+                onFieldClick = onFieldClick,
+                onAnswer     = onRight,
+                modifier     = Modifier.weight(1f)
+            )
         }
     } else if (showLeft) {
         PlayerPanel(

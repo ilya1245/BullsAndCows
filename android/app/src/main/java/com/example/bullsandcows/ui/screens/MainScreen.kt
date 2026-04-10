@@ -1,6 +1,7 @@
 package com.example.bullsandcows.ui.screens
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -101,11 +102,16 @@ fun MainScreen(viewModel: GameViewModel) {
             )
         }
     ) {
+        val kbForLeft  = kbVisible && state.phase == GamePhase.RUNNING && kbTarget == KbTarget.LEFT
+        val kbForRight = kbVisible && state.phase == GamePhase.RUNNING &&
+                         (kbTarget == KbTarget.RIGHT_BULLS || kbTarget == KbTarget.RIGHT_COWS)
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
         ) {
+            // Column with animateContentSize — smoothly shrinks/grows with keyboard
             Column(modifier = Modifier.fillMaxSize()) {
                 TopBar(
                     onMenuClick = { scope.launch { drawerState.open() } },
@@ -113,7 +119,7 @@ fun MainScreen(viewModel: GameViewModel) {
                 )
 
                 when (state.phase) {
-                    GamePhase.IDLE -> WelcomeArea()
+                    GamePhase.IDLE -> WelcomeArea(modifier = Modifier.weight(1f))
                     else -> GameArea(
                         state        = state,
                         leftInput    = leftInput,
@@ -138,19 +144,25 @@ fun MainScreen(viewModel: GameViewModel) {
                         modifier = Modifier.weight(1f)
                     )
                 }
+
+                // Push-up mode: expand/shrink so GameArea smoothly adjusts height
+                AnimatedVisibility(
+                    visible = kbForRight,
+                    enter   = expandVertically(animationSpec = tween(300)),
+                    exit    = shrinkVertically(animationSpec = tween(300))
+                ) {
+                    NumKeyboard(onKey = ::handleKey, onHide = { kbVisible = false })
+                }
             }
 
-            // Floating keyboard overlay
+            // Overlay mode: keyboard floats over bottom for left panel
             AnimatedVisibility(
-                visible  = kbVisible && state.phase == GamePhase.RUNNING,
+                visible  = kbForLeft,
                 enter    = slideInVertically { it },
                 exit     = slideOutVertically { it },
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                NumKeyboard(
-                    onKey  = ::handleKey,
-                    onHide = { kbVisible = false }
-                )
+                NumKeyboard(onKey = ::handleKey, onHide = { kbVisible = false })
             }
         }
     }
