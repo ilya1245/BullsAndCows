@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Bull horns -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,38 Q20,20 32,24 Q36,32 40,36 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M80,38 Q88,20 76,24 Q72,32 68,36 Z" />
+    <!-- Bull head circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,72 m-22,0 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0" />
+    <!-- Nostrils -->
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M47,74 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path
+        android:fillColor="#FF6B35"
+        android:pathData="M55,74 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+</vector>

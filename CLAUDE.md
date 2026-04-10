@@ -81,3 +81,41 @@ Three files, no dependencies or build:
 - Functions: `startGame`, `endGame`, `breakGame`, `doCompTurn`, panel builders, input lock/unlock helpers, table row rendering
 
 The `left` panel is the human guessing; the `right` panel is the computer guessing. In game type 3 (both), turns alternate between the two panels.
+
+## Android Architecture
+
+Project location: `android/` (Kotlin + Jetpack Compose, minSdk 26).
+
+**Package structure:**
+
+- `logic/` — pure Kotlin, no Android dependencies
+  - `GameNumber` — port of `BCNumber` from JS: `generate`, `bulls`, `cows`, `isValid`
+  - `ComputerPlayer` — port of `CompMoves` from JS: Phase 1 (shuffled string slices), Phase 2 (constraint-satisfaction), skill levels 1–4 via `hideBestMove`/`hideWorstMove`
+- `model/` — data classes only
+  - `GameSettings` — immutable settings snapshot (gameType, numSize, skill, whoFirst, lastMove)
+  - `UiState` — root state tree: `GamePhase`, `Prompt`, `Attempt`, `LeftPanelState`, `RightPanelState`
+- `viewmodel/`
+  - `GameViewModel` — all game logic, exposes `StateFlow<UiState>`; uses `viewModelScope` for delayed computer turns
+- `ui/theme/` — `Theme.kt` with `BullsAndCowsTheme`, color constants (`BullColor`, `CowColor`, etc.)
+- `ui/screens/` — `MainScreen.kt` (single screen)
+- `ui/components/` — `SettingsBar` (TopBar + DrawerContent), `CompactTextField`, `GamePanel` (WelcomeArea / PlayerPanel / ComputerPanel / GameArea), `HistoryTable`, `LeftInputRow`, `RightInputRow`, `HelpDialog`
+
+**UI layout:** Single `ModalNavigationDrawer`. `TopBar` (36dp) shows ☰ + status text inline. All settings and control buttons live in `DrawerContent` (hamburger drawer). `StatusBar` was removed.
+
+**Input fields:** `CompactOutlinedTextField` (`CompactTextField.kt`) wraps `BasicTextField` + `OutlinedTextFieldDefaults.DecorationBox` with custom `contentPadding`. This is required because `contentPadding` is not a public param of `OutlinedTextField` in BOM 2024.02.00.
+
+**Focus management:** `PlayerPanel` and `ComputerPanel` each hold a `FocusRequester` and use `LaunchedEffect(state.inputEnabled)` to auto-focus their input field when enabled. For this to work in game type 3, `GameViewModel.processLeftMove` must explicitly set `left.inputEnabled = false` before scheduling the computer turn.
+
+**Build:**
+```
+cd android
+JAVA_HOME="C:/Program Files/Android/Android Studio/jbr" ./gradlew assembleDebug
+```
+JAVA_HOME must point to Android Studio's bundled JDK 21 — system JDK 25 is incompatible with AGP 8.2.2.
+
+**Install on LDPlayer:**
+```
+"/d/LDPlayer/LDPlayer9/adb.exe" install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+**Localisation:** `res/values/strings.xml` (English default) + `res/values-uk/strings.xml` (Ukrainian). Language follows system locale — no in-app switcher.

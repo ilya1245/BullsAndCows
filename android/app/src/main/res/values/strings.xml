@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bulls and Cows</string>
+
+    <!-- Settings labels -->
+    <string name="settings_game_type">Game type</string>
+    <string name="settings_num_size">Digits</string>
+    <string name="settings_skill">Computer skill</string>
+    <string name="settings_first_move">First move</string>
+    <string name="settings_last_move">Continue after one side wins</string>
+
+    <!-- Game types -->
+    <string name="game_type_comp_thinks">Computer thinks</string>
+    <string name="game_type_player_thinks">You think</string>
+    <string name="game_type_both_think">Both think</string>
+
+    <!-- Skill levels -->
+    <string name="skill_highest">Highest</string>
+    <string name="skill_high">High</string>
+    <string name="skill_medium">Medium</string>
+    <string name="skill_low">Low</string>
+
+    <!-- First move -->
+    <string name="first_move_you">You</string>
+    <string name="first_move_comp">Computer</string>
+
+    <!-- Buttons -->
+    <string name="btn_new_game">▶ New Game</string>
+    <string name="btn_break_game">⏹ Break</string>
+    <string name="btn_help">\? Rules</string>
+    <string name="btn_ok">Got it!</string>
+    <string name="btn_make_move">Make move</string>
+    <string name="btn_answer">Answer</string>
+
+    <!-- Panel headers -->
+    <string name="panel_left_title">Player\'s field</string>
+    <string name="panel_left_subtitle">You guess the computer\'s number</string>
+    <string name="panel_right_title">Computer\'s field</string>
+    <string name="panel_right_subtitle">Computer guesses your number</string>
+
+    <!-- Table headers -->
+    <string name="col_move">Move</string>
+    <string name="col_bulls">🐂 Bulls</string>
+    <string name="col_cows">🐄 Cows</string>
+    <string name="col_comp_move">Computer\'s move</string>
+
+    <!-- Input -->
+    <string name="input_your_guess">Your guess…</string>
+    <string name="input_bulls">Bulls:</string>
+    <string name="input_cows">Cows:</string>
+    <string name="hint_number_command">Enter «number» after move 5 to see the answer (counts as a loss)</string>
+
+    <!-- Status bar -->
+    <string name="status_configure">Configure settings and press «New Game»</string>
+    <string name="status_game_broken">Game interrupted</string>
+    <string name="status_you_guess">You guess</string>
+    <string name="status_comp_guesses">Computer guesses</string>
+    <string name="status_both_guess">Both guess</string>
+    <string name="status_skill">Skill: %s</string>
+    <string name="status_first">First: %s</string>
+
+    <!-- Prompts -->
+    <string name="prompt_start_game">Start the game</string>
+    <string name="prompt_enter_number">Enter a %d-digit number</string>
+    <string name="prompt_think_number">Think of a %d-digit number, I\'ll start guessing…</string>
+    <string name="prompt_continue_need_bulls">Keep going — need %d bulls</string>
+    <string name="prompt_player_won" formatted="false">🎉 You guessed %s in %d attempt(s)!</string>
+    <string name="prompt_player_won_practice" formatted="false">🎉 Found number %s in %d attempt(s) (practice)</string>
+    <string name="prompt_player_lost">You lost. You can continue for practice</string>
+    <string name="prompt_comp_move">My move: %s — how many bulls and cows?</string>
+    <string name="prompt_comp_won">🤖 I guessed your number in %d attempt(s)!</string>
+    <string name="prompt_comp_won_practice">🤖 Found number in %d attempt(s) (practice)</string>
+    <string name="prompt_comp_lost">🤖 Lost — continuing for practice…</string>
+    <string name="prompt_last_chance">⚡ Your last chance! Computer already guessed.</string>
+    <string name="prompt_wait_comp">Waiting for computer\'s move…</string>
+    <string name="prompt_wait_player">Waiting for your move…</string>
+    <string name="prompt_wait_your_answer">Waiting for your answer</string>
+    <string name="prompt_contradictory">❌ Contradictory data. Computer cannot continue.</string>
+    <string name="prompt_revealed">👀 You peeked: %s (counts as a loss)</string>
+    <string name="prompt_number_too_early">⚠️ «number» command available from move 5</string>
+    <string name="prompt_invalid_number">⚠️ Enter a valid %d-digit number with unique digits, no leading zero</string>
+    <string name="prompt_invalid_answer">⚠️ Enter valid values: bulls + cows ≤ %d</string>
+    <string name="prompt_game_broken">Game interrupted. The number was: %s</string>
+
+    <!-- Welcome -->
+    <string name="welcome_message">Choose a game type and press New Game</string>
+
+    <!-- Status digits -->
+    <string name="status_digits">%d digits</string>
+
+    <!-- Help dialog -->
+    <string name="help_title">Game Rules</string>
+    <string name="help_intro">The computer thinks of a number with unique digits and no leading zero. Default: 4 digits (3–6 in settings). Your goal is to guess it.</string>
+    <string name="help_how_to_play_title">How to play</string>
+    <string name="help_how_to_play">You suggest a number and the computer tells you the result:</string>
+    <string name="help_bull">🐂 Bull — correct digit in the correct position.</string>
+    <string name="help_cow">🐄 Cow — correct digit in the wrong position.</string>
+    <string name="help_win">To win, you need as many bulls as the number of digits.</string>
+    <string name="help_example_title">Example</string>
+    <string name="help_example">Computer thought: 8203\nYour guess: 7235\nResult: 1 bull (digit «2» is in place), 1 cow (digit «3» is present but wrong position).</string>
+    <string name="help_trick_title">Hint</string>
+    <string name="help_trick">Type «number» instead of a digit from move 5 to see the answer — but it counts as a loss!</string>
+    <string name="help_types_title">Game types</string>
+    <string name="help_type_1">Computer thinks — you guess.</string>
+    <string name="help_type_2">You think — computer guesses, you tell it bulls and cows.</string>
+    <string name="help_type_3">Both think — both guess in turns. The one who guesses first wins (or both, if «Continue» is on).</string>
+</resources>

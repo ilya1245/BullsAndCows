@@ -3,6 +3,7 @@ java/src/out/
 
 # JAR файлы
 *.jar
+!android/gradle/wrapper/gradle-wrapper.jar
 
 # Markdown файлы
 *.md
@@ -25,3 +26,19 @@ java/src/out/
 # OS
 Thumbs.db
 .DS_Store
+
+# Android — machine-specific
+android/local.properties
+
+# Android — Gradle cache & build outputs
+android/.gradle/
+android/build/
+android/app/build/
+
+# Android — JVM crash dumps
+android/hs_err_pid*.log
+android/replay_pid*.log
+
+# JVM crash dumps (any location)
+hs_err_pid*.log
+replay_pid*.log

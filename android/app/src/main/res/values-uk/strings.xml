@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Бики і Корови</string>
+
+    <!-- Settings labels -->
+    <string name="settings_game_type">Тип гри</string>
+    <string name="settings_num_size">Цифр</string>
+    <string name="settings_skill">Майстерність комп\'ютера</string>
+    <string name="settings_first_move">Перший хід</string>
+    <string name="settings_last_move">Продовжити після перемоги однієї сторони</string>
+
+    <!-- Game types -->
+    <string name="game_type_comp_thinks">Комп\'ютер загадує</string>
+    <string name="game_type_player_thinks">Ви загадуєте</string>
+    <string name="game_type_both_think">Обидва загадують</string>
+
+    <!-- Skill levels -->
+    <string name="skill_highest">Найвища</string>
+    <string name="skill_high">Висока</string>
+    <string name="skill_medium">Середня</string>
+    <string name="skill_low">Низька</string>
+
+    <!-- First move -->
+    <string name="first_move_you">Ви</string>
+    <string name="first_move_comp">Комп\'ютер</string>
+
+    <!-- Buttons -->
+    <string name="btn_new_game">▶ Нова гра</string>
+    <string name="btn_break_game">⏹ Перервати</string>
+    <string name="btn_help">\? Правила</string>
+    <string name="btn_ok">Зрозуміло!</string>
+    <string name="btn_make_move">Зробити хід</string>
+    <string name="btn_answer">Відповісти</string>
+
+    <!-- Panel headers -->
+    <string name="panel_left_title">Поле гравця</string>
+    <string name="panel_left_subtitle">Ви вгадуєте число комп\'ютера</string>
+    <string name="panel_right_title">Поле комп\'ютера</string>
+    <string name="panel_right_subtitle">Комп\'ютер вгадує ваше число</string>
+
+    <!-- Table headers -->
+    <string name="col_move">Хід</string>
+    <string name="col_bulls">🐂 Бики</string>
+    <string name="col_cows">🐄 Корови</string>
+    <string name="col_comp_move">Хід комп\'ютера</string>
+
+    <!-- Input -->
+    <string name="input_your_guess">Ваш варіант…</string>
+    <string name="input_bulls">Бики:</string>
+    <string name="input_cows">Корови:</string>
+    <string name="hint_number_command">Введіть «number» після 5-го ходу, щоб дізнатися відповідь (вважається поразкою)</string>
+
+    <!-- Status bar -->
+    <string name="status_configure">Налаштуйте параметри та натисніть «Нова гра»</string>
+    <string name="status_game_broken">Гру перервано</string>
+    <string name="status_you_guess">Ви відгадуєте</string>
+    <string name="status_comp_guesses">Комп\'ютер відгадує</string>
+    <string name="status_both_guess">Обидва відгадують</string>
+    <string name="status_skill">Майстерність: %s</string>
+    <string name="status_first">Перший: %s</string>
+
+    <!-- Prompts -->
+    <string name="prompt_start_game">Почніть гру</string>
+    <string name="prompt_enter_number">Введіть %d-значне число</string>
+    <string name="prompt_think_number">Загадайте %d-значне число, я починаю вгадувати…</string>
+    <string name="prompt_continue_need_bulls">Продовжуйте — потрібно %d биків</string>
+    <string name="prompt_player_won" formatted="false">🎉 Ви вгадали %s за %d спроб(и)!</string>
+    <string name="prompt_player_won_practice" formatted="false">🎉 Знайшли число %s за %d спроб(и) (тренування)</string>
+    <string name="prompt_player_lost">Ви програли. Можете продовжити для тренування</string>
+    <string name="prompt_comp_move">Мій хід: %s — скільки биків і корів?</string>
+    <string name="prompt_comp_won">🤖 Я вгадав ваше число за %d спроб(и)!</string>
+    <string name="prompt_comp_won_practice">🤖 Знайшов число за %d спроб(и) (тренування)</string>
+    <string name="prompt_comp_lost">🤖 Програв — продовжую для тренування…</string>
+    <string name="prompt_last_chance">⚡ Ваш останній шанс! Комп\'ютер вже вгадав.</string>
+    <string name="prompt_wait_comp">Очікування ходу комп\'ютера…</string>
+    <string name="prompt_wait_player">Очікування вашого ходу…</string>
+    <string name="prompt_wait_your_answer">Очікування вашої відповіді</string>
+    <string name="prompt_contradictory">❌ Суперечливі дані. Комп\'ютер не може продовжити.</string>
+    <string name="prompt_revealed">👀 Ви підгледіли: %s (вважається поразкою)</string>
+    <string name="prompt_number_too_early">⚠️ Команда «number» доступна з 5-го ходу</string>
+    <string name="prompt_invalid_number">⚠️ Введіть коректне %d-значне число без повторів, не починаючи з нуля</string>
+    <string name="prompt_invalid_answer">⚠️ Введіть коректні значення: бики + корови ≤ %d</string>
+    <string name="prompt_game_broken">Гру перервано. Число було: %s</string>
+
+    <!-- Welcome -->
+    <string name="welcome_message">Оберіть тип гри та натисніть «Нова гра»</string>
+
+    <!-- Status digits -->
+    <string name="status_digits">%d цифри</string>
+
+    <!-- Help dialog -->
+    <string name="help_title">Правила гри</string>
+    <string name="help_intro">Комп\'ютер загадує число з неповторюваними цифрами, без ведучого нуля. За замовчуванням — 4 цифри (3–6 у налаштуваннях). Ваша мета — розгадати його.</string>
+    <string name="help_how_to_play_title">Як грати</string>
+    <string name="help_how_to_play">Ви пропонуєте свій варіант, а комп\'ютер повідомляє результат:</string>
+    <string name="help_bull">🐂 Бик — вгадана цифра стоїть на своєму місці.</string>
+    <string name="help_cow">🐄 Корова — вгадана цифра стоїть не на своєму місці.</string>
+    <string name="help_win">Щоб виграти, потрібно отримати стільки биків, скільки цифр у числі.</string>
+    <string name="help_example_title">Приклад</string>
+    <string name="help_example">Комп\'ютер загадав: 8203\nВаш варіант: 7235\nВідповідь: 1 бик (цифра «2» на своєму місці), 1 корова (цифра «3» є, але не на тому місці).</string>
+    <string name="help_trick_title">Хитрість</string>
+    <string name="help_trick">Введіть «number» замість числа (не раніше 5-го ходу), і комп\'ютер розкриє відповідь. Але це поразка!</string>
+    <string name="help_types_title">Типи гри</string>
+    <string name="help_type_1">Комп\'ютер загадує — ви відгадуєте.</string>
+    <string name="help_type_2">Ви загадуєте — комп\'ютер відгадує, ви повідомляєте биків і корів.</string>
+    <string name="help_type_3">Обидва загадують — обидва відгадують по черзі. Перемагає той, хто розгадає першим (або обидва, якщо увімкнено «Продовжити»).</string>
+</resources>

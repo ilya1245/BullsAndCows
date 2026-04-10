@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bull_color">#2E7D32</color>
+    <color name="cow_color">#E65100</color>
+    <color name="win_row_bg">#C8E6C9</color>
+    <color name="reveal_row_bg">#FFF9C4</color>
+    <color name="launcher_bg">#FF6B35</color>
+</resources>
