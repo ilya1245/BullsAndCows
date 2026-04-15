@@ -17,10 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.bullsandcows.R
 import com.example.bullsandcows.model.Attempt
-import com.example.bullsandcows.ui.theme.BullColor
-import com.example.bullsandcows.ui.theme.CowColor
-import com.example.bullsandcows.ui.theme.RevealRowBg
-import com.example.bullsandcows.ui.theme.WinRowBg
+import com.example.bullsandcows.ui.theme.bullColor
+import com.example.bullsandcows.ui.theme.cowColor
+import com.example.bullsandcows.ui.theme.revealRowBg
+import com.example.bullsandcows.ui.theme.winRowBg
 
 @Composable
 fun HistoryTable(
@@ -73,8 +73,8 @@ private fun TableRow(
     isReveal: Boolean
 ) {
     val bg = when {
-        isWin    -> WinRowBg
-        isReveal -> RevealRowBg
+        isWin    -> winRowBg()
+        isReveal -> revealRowBg()
         else     -> androidx.compose.ui.graphics.Color.Transparent
     }
 
@@ -99,14 +99,14 @@ private fun TableRow(
         Text(
             text      = bulls,
             style     = textStyle,
-            color     = if (!isHeader) BullColor else MaterialTheme.colorScheme.onSurface,
+            color     = if (!isHeader) bullColor() else MaterialTheme.colorScheme.onSurface,
             modifier  = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )
         Text(
             text      = cows,
             style     = textStyle,
-            color     = if (!isHeader) CowColor else MaterialTheme.colorScheme.onSurface,
+            color     = if (!isHeader) cowColor() else MaterialTheme.colorScheme.onSurface,
             modifier  = Modifier.weight(1f),
             textAlign = TextAlign.Center
         )

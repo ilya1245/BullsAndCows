@@ -10,8 +10,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.bullsandcows.R
-import com.example.bullsandcows.ui.theme.BullColor
-import com.example.bullsandcows.ui.theme.CowColor
+import com.example.bullsandcows.ui.theme.bullColor
+import com.example.bullsandcows.ui.theme.cowColor
 
 @Composable
 fun HelpDialog(onDismiss: () -> Unit) {
@@ -33,8 +33,8 @@ fun HelpDialog(onDismiss: () -> Unit) {
 
                 HelpSection(stringResource(R.string.help_how_to_play_title))
                 Text(stringResource(R.string.help_how_to_play))
-                Text(stringResource(R.string.help_bull),  color = BullColor)
-                Text(stringResource(R.string.help_cow),   color = CowColor)
+                Text(stringResource(R.string.help_bull),  color = bullColor())
+                Text(stringResource(R.string.help_cow),   color = cowColor())
                 Text(stringResource(R.string.help_win))
 
                 HelpSection(stringResource(R.string.help_example_title))

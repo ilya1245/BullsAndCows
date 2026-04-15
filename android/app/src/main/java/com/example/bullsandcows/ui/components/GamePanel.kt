@@ -199,7 +199,7 @@ fun PromptText(prompt: com.example.bullsandcows.model.Prompt, modifier: Modifier
     else
         androidx.compose.ui.res.stringResource(prompt.resId, *prompt.args.toTypedArray())
     val color = when (prompt.type) {
-        PromptType.SUCCESS -> com.example.bullsandcows.ui.theme.BullColor
+        PromptType.SUCCESS -> com.example.bullsandcows.ui.theme.bullColor()
         PromptType.WARN    -> MaterialTheme.colorScheme.tertiary
         PromptType.ERROR   -> MaterialTheme.colorScheme.error
         PromptType.MUTED   -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
