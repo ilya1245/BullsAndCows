@@ -23,7 +23,7 @@ Players guess a number with unique digits, no leading zero, 3–6 digits (defaul
 - **Bulls (Быки)**: correct digit in the correct position
 - **Cows (Коровы)**: correct digit in the wrong position
 
-Win condition: as many bulls as the number length. Typing `number` after move 5 reveals the secret (counts as a loss).
+Win condition: as many bulls as the number length. Typing `?` after move 5 (Android) or `number` after move 5 (Java/Web) reveals the secret (counts as a loss).
 
 ## Running the Applications
 
@@ -98,13 +98,24 @@ Project location: `android/` (Kotlin + Jetpack Compose, minSdk 26).
   - `GameViewModel` — all game logic, exposes `StateFlow<UiState>`; uses `viewModelScope` for delayed computer turns
 - `ui/theme/` — `Theme.kt` with `BullsAndCowsTheme`, color constants (`BullColor`, `CowColor`, etc.)
 - `ui/screens/` — `MainScreen.kt` (single screen)
-- `ui/components/` — `SettingsBar` (TopBar + DrawerContent), `CompactTextField`, `GamePanel` (WelcomeArea / PlayerPanel / ComputerPanel / GameArea), `HistoryTable`, `LeftInputRow`, `RightInputRow`, `HelpDialog`
+- `ui/components/` — `SettingsBar` (TopBar + DrawerContent), `CompactTextField`, `GameInputField`, `NumKeyboard`, `GamePanel` (WelcomeArea / PlayerPanel / ComputerPanel / GameArea), `HistoryTable`, `LeftInputRow`, `RightInputRow`, `HelpDialog`
 
-**UI layout:** Single `ModalNavigationDrawer`. `TopBar` (36dp) shows ☰ + status text inline. All settings and control buttons live in `DrawerContent` (hamburger drawer). `StatusBar` was removed.
+**UI layout:** Single `ModalNavigationDrawer`. Drawer opens automatically on app launch. `TopBar` (36dp) shows ☰ + status text inline. All settings and control buttons live in `DrawerContent`. Drawer closes automatically when game starts.
 
-**Input fields:** `CompactOutlinedTextField` (`CompactTextField.kt`) wraps `BasicTextField` + `OutlinedTextFieldDefaults.DecorationBox` with custom `contentPadding`. This is required because `contentPadding` is not a public param of `OutlinedTextField` in BOM 2024.02.00.
+**Input fields:** `GameInputField` — clickable `Box` with rounded border (no `BasicTextField`, no IME). Active = 2dp primary border; inactive = 1dp outline. `*` is a placeholder digit (player hasn't decided). Go button is disabled while input is blank or contains `*`.
 
-**Focus management:** `PlayerPanel` and `ComputerPanel` each hold a `FocusRequester` and use `LaunchedEffect(state.inputEnabled)` to auto-focus their input field when enabled. For this to work in game type 3, `GameViewModel.processLeftMove` must explicitly set `left.inputEnabled = false` before scheduling the computer turn.
+**Custom keyboard:** `NumKeyboard` — 3 rows (`1–5`, `6–0`, `* ? ⌫ ⌄`), `FilledTonalButton` 48dp. `⌄` hides keyboard. Replaces system IME entirely — system keyboard never opens.
+
+**Keyboard state** is lifted into `MainScreen`: `leftInput`, `rightBulls`, `rightCows`, `kbTarget` (`KbTarget` enum: `LEFT`/`RIGHT_BULLS`/`RIGHT_COWS`), `kbVisible`. `handleKey(Char)` routes keys.
+
+**Hybrid keyboard layout:** Two `AnimatedVisibility` blocks in `MainScreen`:
+- Left panel active → overlay (`slideInVertically`) at `Alignment.BottomCenter` inside a `Box` — doesn't disturb top panel.
+- Right panel active → push-up (`expandVertically(tween(300))`) inside the `Column` — `GameArea` (with `weight(1f)`) shrinks smoothly; bulls/cows fields stay visible.
+- IMPORTANT: only `expandVertically`/`shrinkVertically` changes layout bounds. `slideInVertically` only offsets rendering and causes a jump — do NOT use it for push-up.
+
+**Panel order:** `PlayerPanel` always on top, `ComputerPanel` always below — never swap on active turn.
+
+**`CompactTextField.kt`** is kept for reference but no longer used for input fields.
 
 **Build:**
 ```
